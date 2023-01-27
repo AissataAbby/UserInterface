@@ -3,50 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class gameManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
 
+
+
     [SerializeField] private List<GameObject> targets;
-    [SerializeField] private TextMeshProUGUI scoreText;
+    public TextMeshProUGUI scoreText;
+    //[SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI gameOverText;
-
-   
-
-    private float _spawnRate;
+    private float _spawnRate = 1.0f;
     private int _score;
-
-    private void Awake()
-    {
-        _spawnRate = 1f;
-        //UpdateScore(0);
-    }
+    public bool isGameActive;
 
     void Start()
     {
         StartCoroutine(SpawnTarget());
-       // gameOverText.gameObject.SetActive(true);
-
+        
+       
+        _score = 0;
+        scoreText.text = "Score: " + _score;
+        UpdateScore(0);
+        _spawnRate = 1f;
+        isGameActive = true;
     }
     IEnumerator SpawnTarget()
     {
-        while (true)
+        while (isGameActive)
         {
+
+
             yield return new WaitForSeconds(_spawnRate);
-            var index = Random.Range(0, targets.Count);
+            int index = Random.Range(0, targets.Count);
             Instantiate(targets[index]);
         }
     }
 
     // Update is called once per frame
-  
+
     public void UpdateScore(int scoreToAdd)
     {
         _score += scoreToAdd;
         scoreText.text = "Score :" + _score;
     }
-    public void gameOver()
+    public void GameOver()
     {
         gameOverText.gameObject.SetActive(true);
+        isGameActive = false;
     }
+
 }
+
